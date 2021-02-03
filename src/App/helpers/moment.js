@@ -20,4 +20,26 @@ const halfHourBlocks = (numOfBlocks) => {
   return arr
 }
 
-export { now, halfHourBlocks }
+const dayBlocksFromToday = (numOfBlocks) => {
+  numOfBlocks = --numOfBlocks
+
+  let cloneNow = moment(now)
+  let arr = []
+
+  arr.push(cloneNow.startOf('day'))
+
+  for (let i = 0; i < numOfBlocks; i++) {
+    let newBlock = moment(arr[i]).add(1, 'day')
+    arr.push(newBlock)
+  }
+
+  return arr
+}
+
+const convertToReadableTime = (time) => {
+  let readable = moment(time)
+
+  return readable.format('hh:mm a')
+}
+
+export { now, halfHourBlocks, dayBlocksFromToday, convertToReadableTime }

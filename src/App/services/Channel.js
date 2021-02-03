@@ -7,7 +7,7 @@ const ChannelService = {
       method: 'get',
     }),
 
-  getChannelsByID: async (id) =>
+  getChannelByID: async (id) =>
     API.doRequest({
       url: `/channel/${id}.json`,
       method: 'get',

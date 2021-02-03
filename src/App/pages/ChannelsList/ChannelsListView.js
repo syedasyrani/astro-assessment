@@ -3,7 +3,7 @@ import React from 'react'
 // import { halfHourBlocks } from '../../helpers/moment'
 // import placeholderImage from '../../../assets/images/150.png'
 
-const DashboardView = ({
+const ChannelsListView = ({
   channels,
   listCategories,
   channelCategories,
@@ -16,24 +16,26 @@ const DashboardView = ({
   setActiveSort,
   activeSortOrientation,
   setActiveSortOrientation,
-  activeFilters,
-  setActiveFilters,
+  activeCategoryFilters,
+  setActiveCategoryFilters,
+  activeLanguageFilters,
+  setActiveLanguageFilters,
+  activeResolutionFilters,
+  setActiveResolutionFilters,
   searchText,
   setSearchText,
-  searchResults,
-  setSearchResults,
 }) => {
   return (
     <div className="flex flex-col w-full">
       <div className="bg-gray-700 shadow text-gray-200 mb-4">
         <div className="md:container md:mx-auto flex flex-col">
           <div className="flex flex-row py-2 px-4 content-center items-center justify-between my-2">
-            {listCategories.map((category, i) => (
+            {listCategories.map((list, i) => (
               <div
-                key={`category-${i}`}
+                key={`list-${i}`}
                 className="cursor-pointer hover:text-pink-500"
               >
-                {category}
+                {list}
               </div>
             ))}
           </div>
@@ -48,25 +50,30 @@ const DashboardView = ({
               className="border rounded px-2 py-1 text-gray-900"
               value={searchText}
               onChange={({ target: { value } }) => setSearchText(value)}
+              placeholder="Channel No. or Name"
             />
           </div>
           <div>
             <label>Categories</label>
             <div className="flex flex-row flex-wrap mt-2">
-              {channelCategories.map((category) => (
+              {channelCategories.map((category, i) => (
                 <div
+                  key={`category-${i}`}
                   className={`border mr-2 mb-2 py-1 px-2 rounded cursor-pointer hover:bg-gray-700 hover:border-gray-700 ${
-                    activeFilters.includes(category) &&
+                    activeCategoryFilters.includes(category) &&
                     'bg-gray-700 border-gray-700'
                   }`}
                   onClick={() =>
-                    activeFilters.includes(category)
-                      ? setActiveFilters(
-                          [...activeFilters].filter(
+                    activeCategoryFilters.includes(category)
+                      ? setActiveCategoryFilters(
+                          [...activeCategoryFilters].filter(
                             (filter) => filter !== category
                           )
                         )
-                      : setActiveFilters([...activeFilters, category])
+                      : setActiveCategoryFilters([
+                          ...activeCategoryFilters,
+                          category,
+                        ])
                   }
                 >
                   {category}
@@ -77,20 +84,24 @@ const DashboardView = ({
           <div>
             <label>Languages</label>
             <div className="flex flex-row flex-wrap mt-2">
-              {channelLanguages.map((language) => (
+              {channelLanguages.map((language, i) => (
                 <div
+                  key={`language-${i}`}
                   className={`border mr-2 mb-2 py-1 px-2 rounded cursor-pointer hover:bg-gray-700 hover:border-gray-700 ${
-                    activeFilters.includes(language) &&
+                    activeLanguageFilters.includes(language) &&
                     'bg-gray-700 border-gray-700'
                   }`}
                   onClick={() =>
-                    activeFilters.includes(language)
-                      ? setActiveFilters(
-                          [...activeFilters].filter(
+                    activeLanguageFilters.includes(language)
+                      ? setActiveLanguageFilters(
+                          [...activeLanguageFilters].filter(
                             (filter) => filter !== language
                           )
                         )
-                      : setActiveFilters([...activeFilters, language])
+                      : setActiveLanguageFilters([
+                          ...activeLanguageFilters,
+                          language,
+                        ])
                   }
                 >
                   {language}
@@ -101,20 +112,24 @@ const DashboardView = ({
           <div>
             <label>Resolutions</label>
             <div className="flex flex-row flex-wrap mt-2">
-              {channelResolutions.map((resolution) => (
+              {channelResolutions.map((resolution, i) => (
                 <div
+                  key={`resolution-${i}`}
                   className={`border mr-2 mb-2 py-1 px-2 rounded cursor-pointer hover:bg-gray-700 hover:border-gray-700 ${
-                    activeFilters.includes(resolution) &&
+                    activeResolutionFilters.includes(resolution) &&
                     'bg-gray-700 border-gray-700'
                   }`}
                   onClick={() =>
-                    activeFilters.includes(resolution)
-                      ? setActiveFilters(
-                          [...activeFilters].filter(
+                    activeResolutionFilters.includes(resolution)
+                      ? setActiveResolutionFilters(
+                          [...activeResolutionFilters].filter(
                             (filter) => filter !== resolution
                           )
                         )
-                      : setActiveFilters([...activeFilters, resolution])
+                      : setActiveResolutionFilters([
+                          ...activeResolutionFilters,
+                          resolution,
+                        ])
                   }
                 >
                   {resolution}
@@ -131,8 +146,10 @@ const DashboardView = ({
               value={activeSort}
               onChange={({ target: { value } }) => setActiveSort(value)}
             >
-              {sortOptions.map((option) => (
-                <option value={option}>{option}</option>
+              {sortOptions.map((option, i) => (
+                <option key={`option-${i}`} value={option}>
+                  {option}
+                </option>
               ))}
             </select>
             <button
@@ -151,10 +168,11 @@ const DashboardView = ({
             {channels.map((channel) => (
               <div
                 key={channel.id}
-                className="flex flex-row w-1/5 mb-8 bg-black"
+                className="relative w-1/4 mb-8 bg-black shadow transform origin-center duration-200 ease-in-out hover:z-10 hover:scale-125 hover:shadow-lg"
+                onClick={() => setActiveChannel(channel.id)}
               >
                 <img
-                  className="m-auto hover:border-8 "
+                  className="block m-auto"
                   src={
                     channel.backupImage
                       ? channel.backupImage
@@ -162,6 +180,16 @@ const DashboardView = ({
                   }
                   alt={`${channel.stbNumber}-logo`}
                 />
+                <div className="absolute w-full h-full bg-transparent cursor-pointer inset-0">
+                  <div
+                    className="absolute bottom-0 right-0 text-bold text-white px-2"
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                  >
+                    {parseInt(channel.stbNumber) === 0
+                      ? 'Astro Go Exclusive'
+                      : channel.stbNumber}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -171,4 +199,4 @@ const DashboardView = ({
   )
 }
 
-export default DashboardView
+export default ChannelsListView
