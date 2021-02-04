@@ -1,3 +1,24 @@
+# Astro Assessment Level 1-4
+
+- Done using React
+
+# Packages used
+
+- React
+- React Router
+- Moment
+  - Used for date/time calculations
+- Axios
+  - Used for data fetching
+- PostCSS
+  - Used in conjuction with TailwindCSS for styling
+- TailwindCSS
+  - Used for easy styling of components
+- FontAwesome
+  - Used for icons
+- CRACO
+  - Used to enable webpack modification without ejecting Create-React-App
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+
 import ChannelService from '../../services/Channel'
 import ChannelsListView from './ChannelsListView'
+import LocalStorageHelper from '../../helpers/localStorage'
 
 import {
   listCategories,
@@ -11,6 +14,8 @@ import {
 } from './dashboardData'
 
 const ChannelsList = () => {
+  const { category } = useParams()
+
   const [channelsData, setChannelsData] = useState([])
   const [channels, setChannels] = useState([])
   const [activeChannel, setActiveChannel] = useState(null)
@@ -21,23 +26,60 @@ const ChannelsList = () => {
   const [activeLanguageFilters, setActiveLanguageFilters] = useState([])
   const [searchText, setSearchText] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [favoriteChannels, setFavoriteChannels] = useState([])
+
+  const toggleFavoriteChannel = (id) => {
+    if (favoriteChannels.find((channelID) => channelID === id)) {
+      setFavoriteChannels(
+        favoriteChannels.filter((channelID) => channelID !== id)
+      )
+    } else {
+      setFavoriteChannels([...favoriteChannels, id])
+    }
+  }
 
   // fetch channels data from server
   useEffect(() => {
+    const localStorageService = LocalStorageHelper.getData()
+    let lsFavoriteChannels = JSON.parse(
+      localStorageService.getFavoriteChannels()
+    )
+
     const fetchChannels = async () => {
       let response = await ChannelService.getChannels()
 
       if (response.status === 200 && response.data.response.length > 0) {
-        setChannelsData(response.data.response)
+        if (category === 'my') {
+          if (lsFavoriteChannels && lsFavoriteChannels.length > 0) {
+            setChannelsData(
+              response.data.response.filter((channel) =>
+                lsFavoriteChannels.includes(channel.id)
+              )
+            )
+          } else {
+            setChannelsData(response.data.response)
+          }
+        } else {
+          setChannelsData(response.data.response)
+        }
+      }
+    }
+
+    const fetchFavoriteChannels = () => {
+      if (lsFavoriteChannels && lsFavoriteChannels.length > 0) {
+        setFavoriteChannels(lsFavoriteChannels)
       }
     }
 
     fetchChannels()
-  }, [])
+    fetchFavoriteChannels()
+  }, [category])
 
   useEffect(() => {
-    console.log(activeChannel)
-  }, [activeChannel])
+    const localStorageService = LocalStorageHelper.getData()
+
+    localStorageService.setFavoriteChannels(favoriteChannels)
+  }, [favoriteChannels])
 
   useEffect(() => {
     const sortData = (datas) => {
@@ -196,6 +238,8 @@ const ChannelsList = () => {
       setSearchText={setSearchText}
       searchResults={searchResults}
       setSearchResults={setSearchResults}
+      favoriteChannels={favoriteChannels}
+      toggleFavoriteChannel={toggleFavoriteChannel}
     />
   )
 }

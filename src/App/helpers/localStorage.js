@@ -9,19 +9,32 @@ const LocalStorageHelper = (function () {
   }
 
   function _setToken(token) {
-    localStorage.setItem("token", JSON.stringify(token))
+    localStorage.setItem('token', JSON.stringify(token))
   }
 
   function _getToken() {
-    return localStorage.getItem("token")
+    return localStorage.getItem('token')
   }
 
   function _clearToken() {
-    localStorage.removeItem("token")
+    localStorage.removeItem('token')
+  }
+
+  function _setFavoriteChannels(channels) {
+    localStorage.setItem('favoriteChannels', JSON.stringify(channels))
+  }
+
+  function _getFavoriteChannels() {
+    return localStorage.getItem('favoriteChannels')
+  }
+
+  function _clearFavoriteChannels() {
+    localStorage.removeItem('favoriteChannels')
   }
 
   function _clearData() {
     _clearToken()
+    _clearFavoriteChannels()
   }
 
   return {
@@ -29,6 +42,9 @@ const LocalStorageHelper = (function () {
     setToken: _setToken,
     getToken: _getToken,
     clearToken: _clearToken,
+    setFavoriteChannels: _setFavoriteChannels,
+    getFavoriteChannels: _getFavoriteChannels,
+    clearFavoriteChannels: _clearFavoriteChannels,
     clearData: _clearData,
   }
 })()

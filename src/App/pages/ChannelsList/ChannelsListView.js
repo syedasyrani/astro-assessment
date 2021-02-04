@@ -1,8 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
-
-// import { halfHourBlocks } from '../../helpers/moment'
-// import placeholderImage from '../../../assets/images/150.png'
+import { useHistory, useParams } from 'react-router-dom'
 
 const ChannelsListView = ({
   channels,
@@ -11,8 +8,8 @@ const ChannelsListView = ({
   channelLanguages,
   channelResolutions,
   sortOptions,
-  activeChannel,
-  setActiveChannel,
+  // activeChannel,
+  // setActiveChannel,
   activeSort,
   setActiveSort,
   activeSortOrientation,
@@ -25,6 +22,8 @@ const ChannelsListView = ({
   setActiveResolutionFilters,
   searchText,
   setSearchText,
+  favoriteChannels,
+  toggleFavoriteChannel,
 }) => {
   const history = useHistory()
   return (
@@ -36,6 +35,11 @@ const ChannelsListView = ({
               <div
                 key={`list-${i}`}
                 className="cursor-pointer hover:text-pink-500"
+                onClick={() =>
+                  list === 'My Channels'
+                    ? history.push(`/channels/my`)
+                    : history.push(`/channels`)
+                }
               >
                 {list}
               </div>
@@ -61,7 +65,7 @@ const ChannelsListView = ({
               {channelCategories.map((category, i) => (
                 <div
                   key={`category-${i}`}
-                  className={`border mr-2 mb-2 py-1 px-2 rounded cursor-pointer hover:bg-gray-700 hover:border-gray-700 ${
+                  className={`disborder mr-2 mb-2 py-1 px-2 rounded cursor-pointer hover:bg-gray-700 hover:border-gray-700 ${
                     activeCategoryFilters.includes(category) &&
                     'bg-gray-700 border-gray-700'
                   }`}
@@ -171,10 +175,10 @@ const ChannelsListView = ({
               <div
                 key={channel.id}
                 className="relative w-1/4 mb-8 bg-black shadow transform origin-center duration-200 ease-in-out hover:z-10 hover:scale-125 hover:shadow-lg"
-                onClick={() => history.push(`/channel/${channel.id}`)}
               >
                 <img
-                  className="block m-auto"
+                  className="block m-auto cursor-pointer"
+                  onClick={() => history.push(`/channel/${channel.id}`)}
                   src={
                     channel.backupImage
                       ? channel.backupImage
@@ -182,15 +186,23 @@ const ChannelsListView = ({
                   }
                   alt={`${channel.stbNumber}-logo`}
                 />
-                <div className="absolute w-full h-full bg-transparent cursor-pointer inset-0">
-                  <div
-                    className="absolute bottom-0 right-0 text-bold text-white px-2"
-                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-                  >
-                    {parseInt(channel.stbNumber) === 0
-                      ? 'Astro Go Exclusive'
-                      : channel.stbNumber}
-                  </div>
+                <div
+                  className="absolute bottom-0 right-0 text-bold text-white px-2 z-10"
+                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                >
+                  {parseInt(channel.stbNumber) === 0
+                    ? 'Astro Go Exclusive'
+                    : channel.stbNumber}
+                  <i
+                    className={`cursor-pointer ${
+                      favoriteChannels.find(
+                        (channelID) => channelID === channel.id
+                      )
+                        ? 'fas'
+                        : 'far'
+                    } fa-star ml-2`}
+                    onClick={() => toggleFavoriteChannel(channel.id)}
+                  />
                 </div>
               </div>
             ))}

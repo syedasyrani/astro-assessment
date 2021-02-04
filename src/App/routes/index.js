@@ -31,12 +31,7 @@ const Routes = () => {
           <Switch>
             <PrivateRoute
               authed={isAuthenticated}
-              path="/channels"
-              component={ChannelsList}
-            />
-            <PrivateRoute
-              authed={isAuthenticated}
-              path="/channels/:category"
+              path="/channels/:category?"
               component={ChannelsList}
             />
             <PrivateRoute
