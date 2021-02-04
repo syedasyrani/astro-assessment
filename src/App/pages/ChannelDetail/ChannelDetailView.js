@@ -12,13 +12,17 @@ const ChannelDetailView = ({
     <div className="md:container md:mx-auto flex flex-col p-4">
       {channel ? (
         <div className="flex flex-row space-x-4">
-          <div className="w-1/5">
+          <div className="w-1/4">
             <div
               className="flex flex-col flex-shrink rounded shadow-md justify-center items-center border-r border-transparent p-4"
               style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
             >
-              <img src={channel.originalImage} alt="" />
-              <h2 className="mt-4 font-bold text-xl">{channel.stbNumber}</h2>
+              <img src={channel.imageUrl} alt="" />
+              <h2 className="mt-4 font-bold text-xl">
+                {parseInt(channel.stbNumber) === 0
+                  ? 'Astro Go Exclusive'
+                  : channel.stbNumber}
+              </h2>
               <div className="mt-4 text-gray-800">
                 <p>{channel.description}</p>
               </div>
@@ -54,11 +58,10 @@ const ChannelDetailView = ({
                 }))
                 .filter(
                   (event) =>
-                    !moment(event.datetime).isBefore(
-                      moment().minutes() >= 30
-                        ? moment().minutes(30)
-                        : moment().startOf('hour')
-                    )
+                    moment().isBetween(
+                      moment(event.datetime),
+                      moment(event.endDatetime)
+                    ) || moment().isBefore(moment(event.datetime))
                 )
                 .map((event) => (
                   <div

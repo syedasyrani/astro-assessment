@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 
 // import { halfHourBlocks } from '../../helpers/moment'
 // import placeholderImage from '../../../assets/images/150.png'
@@ -25,6 +26,7 @@ const ChannelsListView = ({
   searchText,
   setSearchText,
 }) => {
+  const history = useHistory()
   return (
     <div className="flex flex-col w-full">
       <div className="bg-gray-700 shadow text-gray-200 mb-4">
@@ -169,7 +171,7 @@ const ChannelsListView = ({
               <div
                 key={channel.id}
                 className="relative w-1/4 mb-8 bg-black shadow transform origin-center duration-200 ease-in-out hover:z-10 hover:scale-125 hover:shadow-lg"
-                onClick={() => setActiveChannel(channel.id)}
+                onClick={() => history.push(`/channel/${channel.id}`)}
               >
                 <img
                   className="block m-auto"
