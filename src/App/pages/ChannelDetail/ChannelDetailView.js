@@ -9,10 +9,10 @@ const ChannelDetailView = ({
   setActiveDaySchedule,
 }) => {
   return (
-    <div className="md:container md:mx-auto flex flex-col p-4">
+    <div className="container md:mx-auto flex flex-col p-4">
       {channel ? (
-        <div className="flex flex-row space-x-4">
-          <div className="w-1/4">
+        <div className="flex flex-col space-y-4 md:flex-row md:space-x-4">
+          <div className="md:w-1/4">
             <div
               className="flex flex-col flex-shrink rounded shadow-md justify-center items-center border-r border-transparent p-4"
               style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
@@ -21,7 +21,7 @@ const ChannelDetailView = ({
               <h2 className="mt-4 font-bold text-xl">
                 {parseInt(channel.stbNumber) === 0
                   ? 'Astro Go Exclusive'
-                  : channel.stbNumber}
+                  : `Channel ${channel.stbNumber}`}
               </h2>
               <div className="mt-4 text-gray-800">
                 <p>{channel.description}</p>
@@ -32,7 +32,7 @@ const ChannelDetailView = ({
             className="flex flex-col rounded shadow-md border-transparent rounded shadow flex-grow text-white"
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
           >
-            <div className="flex flex-row justify-between bg-gray-700 rounded shadow items-center p-2">
+            <div className="hidden md:flex flex-row justify-between bg-gray-700 rounded shadow items-center p-2">
               {dayBlocksFromToday(7).map((day, i) => (
                 <div
                   key={`day-${i}`}
@@ -46,6 +46,21 @@ const ChannelDetailView = ({
                   {i === 0 ? 'Today' : day.format('D MMM')}
                 </div>
               ))}
+            </div>
+            <div className="flex flex-row md:hidden justify-center items-center bg-gray-700 rounded shadow items-center p-4">
+              <span>Select date</span>
+              <select
+                className="text-white w-full p-2 border border-white rounded bg-transparent"
+                onChange={({ target: { value } }) =>
+                  setActiveDaySchedule(value)
+                }
+              >
+                {dayBlocksFromToday(7).map((day, i) => (
+                  <option key={`day-${i}`} value={day}>
+                    {i === 0 ? 'Today' : day.format('D MMM')}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="p-4 space-y-4">
               {channel.schedule[activeDaySchedule.format('YYYY-MM-DD')]
@@ -69,12 +84,15 @@ const ChannelDetailView = ({
                     className="flex flex-row text-gray-600"
                   >
                     <div
-                      className={`w-32 ${
+                      className={`${
                         moment().isBetween(
                           moment(event.datetime),
                           moment(event.endDatetime)
-                        ) && 'font-bold text-gray-700'
+                        )
+                          ? 'font-bold text-gray-700'
+                          : ''
                       }`}
+                      style={{ width: '120px' }}
                     >
                       {moment().isBetween(
                         moment(event.datetime),
@@ -84,11 +102,13 @@ const ChannelDetailView = ({
                         : convertToReadableTime(event.datetime)}
                     </div>
                     <div
-                      className={`${
+                      className={`w-full ${
                         moment().isBetween(
                           moment(event.datetime),
                           moment(event.endDatetime)
-                        ) && 'font-bold text-gray-700'
+                        )
+                          ? 'font-bold text-gray-700'
+                          : ''
                       }`}
                     >
                       {event.title}

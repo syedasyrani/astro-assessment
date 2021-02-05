@@ -28,6 +28,8 @@ const ChannelsList = () => {
   const [searchResults, setSearchResults] = useState([])
   const [favoriteChannels, setFavoriteChannels] = useState([])
 
+  const [openSlider, setOpenSlider] = useState(false)
+
   const toggleFavoriteChannel = (id) => {
     if (favoriteChannels.find((channelID) => channelID === id)) {
       setFavoriteChannels(
@@ -240,6 +242,8 @@ const ChannelsList = () => {
       setSearchResults={setSearchResults}
       favoriteChannels={favoriteChannels}
       toggleFavoriteChannel={toggleFavoriteChannel}
+      openSlider={openSlider}
+      setOpenSlider={setOpenSlider}
     />
   )
 }

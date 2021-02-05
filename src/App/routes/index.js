@@ -25,7 +25,7 @@ const Routes = () => {
 
       <Route
         exact
-        path={['/', '/channels', '/channels/:category', '/channel/:id']}
+        path={['/', '/channels', '/channels/:category?', '/channel/:id']}
       >
         <Layout title="astro assessment">
           <Switch>
